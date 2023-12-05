@@ -1,0 +1,43 @@
+*\\ EXO 2
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_VALS 10
+
+void init_tableau(int tab[], int taille, int mini, int maxi)
+{
+    for (int i = 0; i < taille; ++i) {
+        tab[i] = mini + rand() % (maxi - mini + 1);
+    }
+}
+
+void afficher_tableau(int tab[], int taille)
+{
+    for (int i = 0; i < taille; ++i) {
+        printf("%12d\t", tab[i]);
+    }
+}
+
+int main(void)
+{
+    /*
+     * Utilisation de time(NULL) pour initialiser la graine de srand de manière
+     * à ce qu'elle change à chaque exécution, rendant la séquence de nombres
+     * pseudo-aléatoires différente à chaque fois.
+     */
+    srand(time(NULL));
+
+    int valeurs[MAX_VALS];
+
+    printf("Avant : [\t");
+    afficher_tableau(valeurs, MAX_VALS);
+    puts("]");
+
+    printf("Après : [\t");
+    init_tableau(valeurs, MAX_VALS, 1, 1000);
+    afficher_tableau(valeurs, MAX_VALS);
+    puts("]");
+
+    return EXIT_SUCCESS;
+}
