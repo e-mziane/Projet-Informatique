@@ -1,0 +1,109 @@
+*\\ EXO 4
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAILLE_MAX 10
+
+void afficher_tableau(float tab[], int taille)
+{
+    for (int i = 0; i < taille; ++i) {
+        printf("%12.2f\t", tab[i]);
+    }
+    printf("\n");
+}
+
+int recherche_trie(float v[], int taille, float elt)
+{
+    int i;
+    for (i = 0; i < taille && v[i] < elt; ++i) {}
+    return i;
+}
+
+void test_recherche_trie(float v[], int taille, float elt, int sera_trouve)
+{
+    printf("TEST : recherche_trie...\t");
+    int trouve;
+    int idx = recherche_trie(v, taille, elt);
+    if (v[idx] == elt) {
+        printf("%.2f a ete trouve en case num. %d\t", elt, idx);
+        trouve = 1;
+    } else {
+        printf("%.2f n'a pas ete trouve, mais s'il etait dans le tableau, il serait en case num. %d.\t", elt, idx);
+        trouve = 0;
+    }
+    if (trouve != sera_trouve)
+        puts("LE TEST A ECHOUE.");
+    else
+        puts("LE TEST A REUSSI.");
+}
+
+int recherche_dicho(float v[], int taille, float elt)
+{
+    int debut = 0,
+        fin = taille - 1,
+        milieu = (fin + debut) / 2;
+
+    if (elt < v[debut]) return 0;
+    if (elt > v[fin]) return taille;
+
+    while (debut <= fin) {
+        milieu = (fin + debut) / 2;
+        if (v[milieu] == elt)
+            return milieu;
+        else if (v[milieu] > elt)
+            fin = milieu - 1;
+        else
+            debut = milieu + 1;
+    }
+
+    if (elt > v[milieu])
+        milieu += 1;
+
+    return milieu;
+}
+
+void test_recherche_dicho(float v[], int taille, float elt, int idx_attendu)
+{
+    printf("TEST : recherche_dicho...\t");
+    int idx = recherche_dicho(v, taille, elt);
+    if (v[idx] == elt) {
+        printf("%.2f a ete trouve en case num. %d\t", elt, idx);
+    } else {
+        printf("%.2f n'a pas ete trouve, mais s'il etait dans le tableau, il serait en case num. %d.\t", elt, idx);
+    }
+    if (idx != idx_attendu)
+        puts("LE TEST A ECHOUE.");
+    else
+        puts("LE TEST A REUSSI.");
+}
+
+int main(void)
+{
+    float t[] = { -3.2f, -0.1f, 0.1f, 10.0f, 100.0f, 101.1f };
+    int nb_cases_init = sizeof(t) / sizeof(t[0]);
+
+    puts("t :");
+    printf("[\t");
+    for (int i = 0; i < nb_cases_init; ++i) {
+        printf("%12d\t", i);
+    }
+    puts("]");
+
+    printf("[\t");
+    afficher_tableau(t, nb_cases_init);
+    puts("]");
+
+    test_recherche_trie(t, nb_cases_init, -0.1f, 1);
+    test_recherche_dicho(t, nb_cases_init, -0.1f, 1);
+
+    test_recherche_trie(t, nb_cases_init, -1e6f, 0);
+    test_recherche_dicho(t, nb_cases_init, -1e6f, 0);
+
+    test_recherche_trie(t, nb_cases_init, 1e4f, nb_cases_init);
+    test_recherche_dicho(t, nb_cases_init, 1e4f, nb_cases_init);
+
+    test_recherche_trie(t, nb_cases_init, 10.5f, 0);
+    test_recherche_dicho(t, nb_cases_init, 10.5f, 0);
+
+    return EXIT_SUCCESS;
+}
