@@ -1,0 +1,27 @@
+*\\ EXO 1
+
+#include <stdio.h>
+
+int g_compteur = 0; // Initialisation de la variable globale à 0
+
+void nb_fois(void)
+{
+    ++g_compteur;
+    printf("nb_fois() a ete appelee %d fois.\n", g_compteur);
+}
+
+int main(void)
+{
+    int nombreAppels;
+
+    printf("Entrez le nombre de fois que vous souhaitez appeler la fonction : ");
+    scanf("%d", &nombreAppels);
+
+    for (int i = 0; i < nombreAppels; ++i) {
+        nb_fois();
+    }
+
+    printf("En tout, on a appele nb_fois() %d fois.\n", g_compteur);
+
+    return 0;
+}
