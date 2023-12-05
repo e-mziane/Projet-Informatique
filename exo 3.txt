@@ -1,0 +1,52 @@
+*\\ EXO 3
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VALS 5
+
+void afficher_tableau(int tab[], int taille)
+{
+    for (int i = 0; i < taille; ++i) {
+        printf("%12d\t", tab[i]);
+    }
+    printf("\n");
+}
+
+int recherche_non_trie(int v[], int taille, int elt)
+{
+    for (int i = 0; i < taille; ++i) {
+        if (v[i] == elt)
+            return i;
+    }
+    return -1;
+}
+
+int main(void)
+{
+    int vals[MAX_VALS] = { -1, 4, 0, 10, -100 };
+
+    puts("vals :");
+    printf("[\t");
+    for (int i = 0; i < MAX_VALS; ++i) {
+        printf("%12d\t", i);
+    }
+    puts("]");
+
+    printf("[\t");
+    afficher_tableau(vals, MAX_VALS);
+    puts("]");
+
+    int idx = recherche_non_trie(vals, MAX_VALS, 10);
+    if (idx != -1) 
+        printf("La valeur 10 se trouve à l'indice %d : vals[%d] = %d\n", idx, idx, vals[idx]);
+    else
+        printf("La valeur 10 n'existe pas dans le tableau vals.\n");
+    
+    idx = recherche_non_trie(vals, MAX_VALS, 1000);
+    if (idx != -1) 
+        printf("La valeur 1000 se trouve à l'indice %d : vals[%d] = %d\n", idx, idx, vals[idx]);
+    else
+        printf("La valeur 1000 n'existe pas dans le tableau vals.\n");
+
+    return EXIT_SUCCESS;
+}
