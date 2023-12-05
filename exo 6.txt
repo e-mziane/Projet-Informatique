@@ -1,0 +1,50 @@
+*\\ EXO 6
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_CH 100
+
+void chaine_en_maj(char ch[])
+{
+    for (int i = 0; ch[i] != '\0'; ++i)
+        ch[i] = toupper(ch[i]);
+}
+
+void test_chaine_en_maj(char ch[], char ch_attendu[])
+{
+    printf("TEST : chaine_en_maj...\t");
+    chaine_en_maj(ch);
+    if (strcmp(ch, ch_attendu) != 0) {
+        printf("\"%s\" != \"%s\".\tECHEC.\n", ch, ch_attendu);
+    } else {
+        printf("\"%s\" == \"%s\".\tREUSSI.\n", ch, ch_attendu);
+    }
+}
+
+void chomp(char ch[])
+{
+    int l = strlen(ch) - 1;
+    if (ch[l] == '\n')
+        ch[l] = '\0';
+}
+
+void lire_ligne(char ch[], int taille)
+{
+    fgets(ch, taille, stdin);
+    chomp(ch);
+}
+
+int main(void)
+{
+    char chaine[] = "CY Cergy Paris Universite, IUT de Neuville";
+    test_chaine_en_maj(chaine, "CY CERGY PARIS UNIVERSITE, IUT DE NEUVILLE");
+
+    char chaine2[MAX_CH];
+    printf("Entrer une chaine : ");
+    lire_ligne(chaine2, MAX_CH);
+    chaine_en_maj(chaine2);
+    printf("Mise en majuscule : \"%s\"\n", chaine2);
+
+    return 0;
+}
