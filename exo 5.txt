@@ -1,0 +1,82 @@
+*\\ EXO 5
+#include <stdio.h>
+
+#define TAILLE_MAX 10
+
+void afficher_tableau(int tab[], int taille)
+{
+    for (int i = 0; i < taille; ++i)
+        printf("%12d\t", tab[i]);
+    printf("\n");
+}
+
+void selection_sort(int t[], int taille)
+{
+    int i, j, imin;
+    for (i = 0; i < taille; ++i) {
+        imin = i;
+        for (j = i + 1; j < taille; ++j) {
+            if (t[imin] > t[j])
+                imin = j;
+        }
+        // échange : t[i] <=> t[imin]
+        int tmp = t[i];
+        t[i] = t[imin];
+        t[imin] = tmp;
+    }
+}
+
+void test_selection_sort(int t[], int taille)
+{
+    printf("TEST : selection_sort...\t");
+    selection_sort(t, taille);
+    int i;
+    for (i = 0; i < taille - 1 && t[i] < t[i + 1]; ++i)
+        ; // rien
+
+    if (i == taille - 1)
+        puts("REUSSI.");
+    else
+        puts("ECHEC.");
+}
+
+int main(void)
+{
+    int t[TAILLE_MAX] = {
+        1, 50, 500, 90, 1000,
+        100, 5000, 10000, 550, 750
+    };
+
+    puts("Tableau non trie :");
+    printf("[\t");
+    // Affiche les numéros (indices) des cases initialisées de <t>.
+    for (int i = 0; i < TAILLE_MAX; ++i) {
+        printf("%12d\t", i);
+    }
+    puts("]");
+
+    printf("[\t");
+    afficher_tableau(t, TAILLE_MAX);
+    puts("]");
+
+    test_selection_sort(t, TAILLE_MAX);
+
+    // Réinitialisation du tableau avant le deuxième tri
+    int t2[TAILLE_MAX] = {
+        1, 50, 500, 90, 1000,
+        100, 5000, 10000, 550, 750
+    };
+
+    puts("Tableau trie :");
+    printf("[\t");
+    for (int i = 0; i < TAILLE_MAX; ++i) {
+        printf("%12d\t", i);
+    }
+    puts("]");
+
+    printf("[\t");
+    afficher_tableau(t2, TAILLE_MAX);
+    puts("]");
+
+    return 0;
+}
