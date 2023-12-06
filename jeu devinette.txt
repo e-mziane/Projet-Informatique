@@ -1,0 +1,66 @@
+*\\ JEU DEVINETTE
+*\\Le programme suivant simule un jeu de devinette où l'utilisateur doit trouver un nombre généré aléatoirement entre 1 et 100
+*\\Ce programme simule un jeu de devinette où l'utilisateur a un nombre limité d'essais pour deviner un nombre généré aléatoirement. 
+Il utilise des fonctions pour gérer différentes parties du jeu
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_GUESSES 10
+
+// Fonction de génération aléatoire d'un nombre entre min et max
+int generer_nombre(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
+
+// Fonction principale pour jouer au jeu de devinette
+void jouer_jeu() {
+    int nombre_a_deviner, tentative, essais_restants;
+    
+    // Initialisation de la graine pour la génération aléatoire
+    srand(time(NULL));
+    
+    // Génération du nombre aléatoire à deviner
+    nombre_a_deviner = generer_nombre(1, 100);
+    
+    printf("Bienvenue dans le jeu de devinette !\n");
+    printf("Devinez le nombre entre 1 et 100.\n");
+
+    essais_restants = MAX_GUESSES;
+    do {
+        printf("Il vous reste %d essais. Entrez votre proposition : ", essais_restants);
+        scanf("%d", &tentative);
+
+        if (tentative < nombre_a_deviner) {
+            printf("Trop bas !\n");
+        } else if (tentative > nombre_a_deviner) {
+            printf("Trop haut !\n");
+        } else {
+            printf("Félicitations, vous avez deviné le nombre %d en %d essais !\n", nombre_a_deviner, MAX_GUESSES - essais_restants + 1);
+            return;
+        }
+
+        essais_restants--;
+
+    } while (essais_restants > 0);
+
+    printf("Désolé, vous n'avez pas deviné le nombre. Le nombre était : %d\n", nombre_a_deviner);
+}
+
+// Fonction principale du programme
+int main(void) {
+    char choix;
+    
+    do {
+        jouer_jeu();
+
+        printf("Voulez-vous jouer à nouveau ? (O/N) : ");
+        scanf(" %c", &choix);
+
+    } while (choix == 'O' || choix == 'o');
+
+    printf("Merci d'avoir joué !\n");
+
+    return 0;
+}
