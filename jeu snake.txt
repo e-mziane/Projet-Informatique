@@ -1,0 +1,163 @@
+*\\ JEU DU SNAKE
+*\\il faut avoir la bibliothèque graphique NCurses
+*\\ce programme crée un simple jeu Snake en utilisant la bibliothèque NCurses pour la gestion de l'interface utilisateur. Il utilise les fonctions pour initialiser la partie,
+ afficher l'état du jeu, déplacer le serpent, vérifier les collisions, et gérer les entrées utilisateur.  
+
+#include <ncurses.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+
+#define LARGEUR 20
+#define HAUTEUR 10
+#define VITESSE 150000
+
+typedef struct {
+    int x, y;
+} Position;
+
+typedef struct {
+    Position tete;
+    Position* corps;
+    int longueur;
+    char direction;
+} Snake;
+
+typedef struct {
+    Position position;
+} Fruit;
+
+void initialiser_ncurses() {
+    initscr();
+    timeout(0);
+    keypad(stdscr, TRUE);
+    noecho();
+    curs_set(0);
+}
+
+void quitter_ncurses() {
+    endwin();
+}
+
+void initialiser_partie(Snake* snake, Fruit* fruit) {
+    snake->tete.x = LARGEUR / 2;
+    snake->tete.y = HAUTEUR / 2;
+    snake->corps = NULL;
+    snake->longueur = 1;
+    snake->direction = 'D';
+
+    fruit->position.x = rand() % LARGEUR;
+    fruit->position.y = rand() % HAUTEUR;
+}
+
+void afficher(Snake snake, Fruit fruit) {
+    clear();
+    mvprintw(snake.tete.y, snake.tete.x, "O");
+
+    for (int i = 0; i < snake.longueur; i++) {
+        mvprintw(snake.corps[i].y, snake.corps[i].x, "o");
+    }
+
+    mvprintw(fruit.position.y, fruit.position.x, "F");
+
+    refresh();
+}
+
+void deplacer(Snake* snake) {
+    Position nouvelle_tete = snake->tete;
+
+    switch (snake->direction) {
+        case 'H':
+            nouvelle_tete.y--;
+            break;
+        case 'B':
+            nouvelle_tete.y++;
+            break;
+        case 'G':
+            nouvelle_tete.x--;
+            break;
+        case 'D':
+            nouvelle_tete.x++;
+            break;
+    }
+
+    if (nouvelle_tete.x < 0) nouvelle_tete.x = LARGEUR - 1;
+    if (nouvelle_tete.x >= LARGEUR) nouvelle_tete.x = 0;
+    if (nouvelle_tete.y < 0) nouvelle_tete.y = HAUTEUR - 1;
+    if (nouvelle_tete.y >= HAUTEUR) nouvelle_tete.y = 0;
+
+    for (int i = snake->longueur - 1; i > 0; i--) {
+        snake->corps[i] = snake->corps[i - 1];
+    }
+
+    snake->corps[0] = snake->tete;
+    snake->tete = nouvelle_tete;
+}
+
+int verifier_collision(Snake snake, Fruit fruit) {
+    if (snake.tete.x == fruit.position.x && snake.tete.y == fruit.position.y) {
+        snake.longueur++;
+        snake.corps = realloc(snake.corps, snake.longueur * sizeof(Position));
+        return 1;
+    }
+
+    for (int i = 0; i < snake.longueur; i++) {
+        if (snake.tete.x == snake.corps[i].x && snake.tete.y == snake.corps[i].y) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+int main() {
+    srand(time(NULL));
+
+    initialiser_ncurses();
+
+    Snake snake;
+    Fruit fruit;
+
+    initialiser_partie(&snake, &fruit);
+
+    int collision = 0;
+    int input;
+
+    while (1) {
+        afficher(snake, fruit);
+        usleep(VITESSE);
+
+        input = getch();
+        if (input != ERR) {
+            switch (input) {
+                case KEY_UP:
+                    if (snake.direction != 'B') snake.direction = 'H';
+                    break;
+                case KEY_DOWN:
+                    if (snake.direction != 'H') snake.direction = 'B';
+                    break;
+                case KEY_LEFT:
+                    if (snake.direction != 'D') snake.direction = 'G';
+                    break;
+                case KEY_RIGHT:
+                    if (snake.direction != 'G') snake.direction = 'D';
+                    break;
+            }
+        }
+
+        deplacer(&snake);
+        collision = verifier_collision(snake, fruit);
+
+        if (collision == -1) {
+            mvprintw(HAUTEUR / 2, LARGEUR / 2 - 5, "GAME OVER");
+            break;
+        } else if (collision == 1) {
+            fruit.position.x = rand() % LARGEUR;
+            fruit.position.y = rand() % HAUTEUR;
+        }
+    }
+
+    quitter_ncurses();
+
+    return 0;
+}
