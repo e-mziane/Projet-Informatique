@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_TITRE_LENGTH 200
+#define MAX_AUTHOR_LENGTH 5
+#define MAX_EDITEUR_LENGTH 50
+#define MAX_NOM_DE_FAMILLE_LENGTH 50
+#define MAX_ISBN_LENGTH 13
+#define MAX_LIVRES_EN_STOCK 100
+#define MAX_PRENOM_LENGHT 30
+
+typedef struct {
+    char lastName[MAX_AUTEUR_LENGTH];
+    char firstName[MAX_NOM_DE_FAMILLE_LENGTH];
+} Author;
+
+typedef struct {
+    char titree[MAX_TITRE_LENGTH];
+    Author auteur[5];
+    char editeur[MAX_EDITEUR_LENGTH];
+    int stock;
+    int frequentlySold;
+    char ISBN[MAX_ISBN_LENGTH];
+} Book;
+
+void addBook(Book *library, int *numBooks, Book newBook) {
+    if (*numBooks < MAX_BOOKS_IN_STOCK) {
+        library[*numBooks] = newBook;
+        (*numBooks)++;
+        printf("Livre ajouté avec succès.\n");
+    } else {
+        printf("Le stock de livres est plein. Impossible d'ajouter un nouveau livre.\n");
+    }
+}
+
+void orderBooks(Book *library, int *numBooks, char ISBN[MAX_ISBN_LENGTH], int quantity) {
+    for (int i = 0; i < *numBooks; i++) {
+        if (strcmp(library[i].ISBN, ISBN) == 0) {
+            library[i].stock += quantity;
+            printf("Commande de livres effectuée avec succès.\n");
+            return;
+        }
+    }
+    printf("L'ISBN spécifié n'a pas été trouvé dans la bibliothèque.\n");
+}
+
+void identifyFrequentlySoldBooks(Book *library, int numBooks) {
+    for (int i = 0; i < numBooks; i++) {
+        if (library[i].frequentlySold) {
+            printf("ISBN: %s est fréquemment vendu.\n", library[i].ISBN);
+        }
+    }
+}
+
+int main() {
+    Book library[MAX_BOOKS_IN_STOCK];
+    int numBooks = 0;
+
+    // Exemple d'utilisation
+    Book newBook = {
+        .title = "Titre du livre",
+        .authors = {{"NomAuteur1", "PrenomAuteur1"}, {"NomAuteur2", "PrenomAuteur2"}},
+        .editor = "Editeur1",
+        .stock = 10,
+        .frequentlySold = 1,
+        .ISBN = "9781234567890"
+    };
+
+    addBook(library, &numBooks, newBook);
+    orderBooks(library, &numBooks, "9781234567890", 5);
+    identifyFrequentlySoldBooks(library, numBooks);
+
+    return 0;
+}
