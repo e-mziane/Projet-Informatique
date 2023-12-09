@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    char ISBN[14];
+    char titre[50];
+    char auteur[50];
+    int quantite;
+} Ouvrage;
+
+Ouvrage ouvrages[100];
+int nb_ouvrages = 0;
+
+void ajouter_ouvrage() {
+    printf("ISBN: ");
+    scanf("%s", ouvrages[nb_ouvrages].ISBN);
+    printf("Titre: ");
+    scanf("%s", ouvrages[nb_ouvrages].titre);
+    printf("Auteur: ");
+    scanf("%s", ouvrages[nb_ouvrages].auteur);
+    printf("Quantité: ");
+    scanf("%d", &ouvrages[nb_ouvrages].quantite);
+    nb_ouvrages++;
+}
+
+void supprimer_ouvrage() {
+    char ISBN[14];
+    printf("ISBN de l'ouvrage à supprimer: ");
+    scanf("%s", ISBN);
+
+    for (int i = 0; i < nb_ouvrages; i++) {
+        if (strcmp(ouvrages[i].ISBN, ISBN) == 0) {
+            for (int j = i; j < nb_ouvrages - 1; j++) {
+                ouvrages[j] = ouvrages[j + 1];
+            }
+            nb_ouvrages--;
+            break;
+        }
+    }
+}
+
+void lister_ouvrages() {
+    for (int i = 0; i < nb_ouvrages; i++) {
+        printf("ISBN: %s\n", ouvrages[i].ISBN);
+        printf("Titre: %s\n", ouvrages[i].titre);
+        printf("Auteur: %s\n", ouvrages[i].auteur);
+        printf("Quantité: %d\n\n", ouvrages[i].quantite);
+    }
+}
+
+void lister_ouvrages_quantite() {
+    int seuil;
+    printf("Entrez le seuil en dessous duquel afficher les ouvrages: ");
+    scanf("%d", &seuil);
+
+    for (int i = 0; i < nb_ouvrages; i++) {
+        if (ouvrages[i].quantite <= seuil) {
+            printf("ISBN: %s\n", ouvrages[i].ISBN);
+            printf("Titre: %s\n", ouvrages[i].titre);
+            printf("Auteur: %s\n", ouvrages[i].auteur);
+            printf("Quantité: %d\n\n", ouvrages[i].quantite);
+        }
+    }
+}
+
+int main() {
+    int choix;
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Ajouter un ouvrage\n");
+        printf("2. Supprimer un ouvrage\n");
+        printf("3. Lister les ouvrages\n");
+        printf("4. Lister les ouvrages dont on a moins que X exemplaires\n");
+        printf("0. Quitter\n");
+        printf("Entrez votre choix: ");
+        scanf("%d", &choix);
+
+        switch (choix) {
+            case 1:
+                ajouter_ouvrage();
+                break;
+            case 2:
+                supprimer_ouvrage();
+                break;
+            case 3:
+                lister_ouvrages();
+                break;
+            case 4:
+                lister_ouvrages_quantite();
+                break;
+            case 0:
+                return 0;
+            default:
+                printf("Choix incorrect. Veuillez réessayer.\n");
+        }
+    }
+}
