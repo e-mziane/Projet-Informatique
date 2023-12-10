@@ -18,7 +18,7 @@ struct livres {
     char frequence[20];
 };
 
-vvoid lister_ouvrages() {
+void lister_ouvrages() {
     for (int i = 0; i < nb_ouvrages; i++) {
         printf("ISBN: %s\n", ouvrages[i].ISBN);
         printf("Titre: %s\n", ouvrages[i].titre);
@@ -85,7 +85,7 @@ int ajoutlivre(struct livres Livres[], int *numLivres) {
     return i;
 }
 
-// Les autres fonctions restent inchangées...
+
 
 int main(void) {
     struct livres biblio[MAX_LIVRES];
