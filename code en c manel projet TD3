@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LIVRES 100
+
+struct auteur {
+    char nom[50];
+    char prenom[30];
+};
+
+struct livres {
+    char titre[200];
+    struct auteur auteur[5];
+    char editeur[50];
+    long long ISBN;
+    int quantite;
+    char frequence[20];
+};
+
+void afficherbibliotheque(struct livres Livres[], int numLivres) {
+    for (int i = 0; i < numLivres; i++) {
+        printf("Titre du livre : %s\n", Livres[i].titre);
+        printf("Editeur : %s\n", Livres[i].editeur);
+        for (int j = 0; j < 5; j++) {
+            if (Livres[i].auteur[j].nom[0] != '\0' && Livres[i].auteur[j].prenom[0] != '\0') {
+                printf("Auteur %d : %s %s\n", j + 1, Livres[i].auteur[j].nom, Livres[i].auteur[j].prenom);
+            }
+        }
+        printf("ISBN : %lld\n", Livres[i].ISBN);
+        printf("Quantite : %d\n", Livres[i].quantite);
+        printf("Statut de vente : %s\n", Livres[i].frequence);
+        printf("\n");
+    }
+}
+
+void saisirAuteurs(struct auteur *auteur) {
+    printf("Saisir le nom de l'auteur : ");
+    fflush(stdout);
+    fgets(auteur->nom, 50, stdin);
+
+    printf("Saisir le prénom de l'auteur : ");
+    fflush(stdout);
+    fgets(auteur->prenom, 30, stdin);
+
+    auteur->nom[strcspn(auteur->nom, "\n")] = '\0';
+    auteur->prenom[strcspn(auteur->prenom, "\n")] = '\0';
+}
+
+int ajoutlivre(struct livres Livres[], int *numLivres) {
+    int i = *numLivres;
+    int nbAuteurs;
+
+    printf("Saisir le nombre d'auteurs : ");
+    fflush(stdout);
+    scanf("%d", &nbAuteurs);
+
+    for (int j = 0; j < nbAuteurs; j++) {
+        saisirAuteurs(&(Livres[i].auteur[j]));
+    }
+
+    printf("Entrez le titre du livre : ");
+    fflush(stdout);
+    fgets(Livres[i].titre, 200, stdin);
+
+    char isbn[14];
+    do {
+        printf("Entrez l'ISBN du livre (13 chiffres) : ");
+        fflush(stdout);
+        fgets(isbn, 14, stdin);
+        isbn[strcspn(isbn, "\n")] = '\0';
+    } while (strlen(isbn) != 13);
+
+    Livres[i].ISBN = atoll(isbn);
+
+    printf("Entrez l'éditeur du livre : ");
+    fflush(stdout);
+    fgets(Livres[i].editeur, 50, stdin);
+
+    printf("Entrez la quantité du livre : ");
+    fflush(stdout);
+    scanf("%d", &(Livres[i].quantite));
+
+    strcpy(Livres[i].frequence, "Statut de vente indéfini");
+    (*numLivres)++;
+    return i;
+}
+
+// Les autres fonctions restent inchangées...
+
+int main(void) {
+    struct livres biblio[MAX_LIVRES];
+    int i = 0;
+    int numLivres = i;
+    int choix;
+
+    do {
+        printf("1 Afficher la bibliothèque\n");
+        printf("2 Ajouter un livre\n");
+        printf("3 Quitter\n");
+        printf("Choisissez une option : ");
+        fflush(stdout);
+        scanf("%d", &choix);
+
+        switch (choix) {
+            case 1:
+                afficherbibliotheque(biblio, numLivres);
+                break;
+            case 2:
+                i = ajoutlivre(biblio, &numLivres);
+                break;
+            case 3:
+                printf("Au revoir !\n");
+                break;
+            default:
+                printf("Option invalide\n");
+                break;
+        }
+    } while (choix != 3);
+
+    return 0;
+}
