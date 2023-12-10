@@ -84,6 +84,21 @@ int ajoutlivre(struct livres Livres[], int *numLivres) {
     (*numLivres)++;
     return i;
 }
+void supprimer_ouvrage() {
+    char ISBN[14];
+    printf("ISBN de l'ouvrage à supprimer: ");
+    scanf("%s", ISBN);
+
+    for (int i = 0; i < nb_ouvrages; i++) {
+        if (strcmp(ouvrages[i].ISBN, ISBN) == 0) {
+            for (int j = i; j < nb_ouvrages - 1; j++) {
+                ouvrages[j] = ouvrages[j + 1];
+            }
+            nb_ouvrages--;
+            break;
+        }
+    }
+}
 
 
 
