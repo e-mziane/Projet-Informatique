@@ -18,14 +18,13 @@ struct livres {
     char frequence[20];
 };
 
-void afficherbibliotheque(struct livres Livres[], int numLivres) {
-    for (int i = 0; i < numLivres; i++) {
-        printf("Titre du livre : %s\n", Livres[i].titre);
-        printf("Editeur : %s\n", Livres[i].editeur);
-        for (int j = 0; j < 5; j++) {
-            if (Livres[i].auteur[j].nom[0] != '\0' && Livres[i].auteur[j].prenom[0] != '\0') {
-                printf("Auteur %d : %s %s\n", j + 1, Livres[i].auteur[j].nom, Livres[i].auteur[j].prenom);
-            }
+vvoid lister_ouvrages() {
+    for (int i = 0; i < nb_ouvrages; i++) {
+        printf("ISBN: %s\n", ouvrages[i].ISBN);
+        printf("Titre: %s\n", ouvrages[i].titre);
+        printf("Auteur: %s\n", ouvrages[i].auteur);
+        printf("Quantité: %d\n\n", ouvrages[i].quantite);
+    }
         }
         printf("ISBN : %lld\n", Livres[i].ISBN);
         printf("Quantite : %d\n", Livres[i].quantite);
