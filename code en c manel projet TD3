@@ -88,13 +88,13 @@ int ajoutlivre(struct livres Livres[], int *numLivres) {
 
 
 int main(void) {
-    struct livres biblio[MAX_LIVRES];
+    struct livres Liste[MAX_LIVRES];
     int i = 0;
     int numLivres = i;
     int choix;
 
     do {
-        printf("1 Afficher la bibliothèque\n");
+        printf("1 Afficher la liste\n");
         printf("2 Ajouter un livre\n");
         printf("3 Quitter\n");
         printf("Choisissez une option : ");
@@ -103,7 +103,7 @@ int main(void) {
 
         switch (choix) {
             case 1:
-                afficherbibliotheque(biblio, numLivres);
+                Lister_ouvrages(Livre, numLivres);
                 break;
             case 2:
                 i = ajoutlivre(biblio, &numLivres);
