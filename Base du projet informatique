@@ -9,7 +9,7 @@ typedef struct {
     int quantite;
 } Ouvrage;
 
-Ouvrage ouvrages[100];
+Ouvrage ouvrages[100]; 
 int nb_ouvrages = 0;
 
 void ajouter_ouvrage() {
