@@ -100,7 +100,95 @@ void supprimer_ouvrage() {
     }
 }
 
+void afficherLivresaCommander(struct livres Livres[], int numLivres) {
+    printf("Livres à commander (moins de 5 exemplaires et vendus fréquemment) :\n");
+    for (int i = 0; i < numLivres; i++) {
+        if (Livres[i].quantite < 5 && strcmp(Livres[i].frequence, "fréquemment vendu") == 0) {
+            printf("Le titre du livre %d : %s\n", i + 1, Livres[i].titre);
+            printf("Editeur : %s\n", Livres[i].editeur);
+            for (int j = 0; j < 5; j++) {
+                // Check if the author's name is not empty
+                if (Livres[i].auteur[j].nom[0] != '\0' && Livres[i].auteur[j].prenom[0] != '\0') {
+                    printf("Auteur %d de l'oeuvre : %s %s\n", j + 1, Livres[i].auteur[j].nom, Livres[i].auteur[j].prenom);
+                }
+            }
+            printf("ISBN : %lld\n", Livres[i].ISBN);
+            printf("Quantité : %d\n", Livres[i].quantite);
+            printf("Le statut de vente du livre est : %s\n", Livres[i].frequence);
+            printf("\n");
+        }
+    }
+}
 
+void chercherLivreParISBN(struct livres Livres[], int numLivres) {
+    char isbn[14];
+    do {
+        printf("Entrez l'ISBN du livre à chercher (13 chiffres) : ");
+        fflush(stdout);
+        fgets(isbn, 14, stdin);
+        isbn[strcspn(isbn, "\n")] = '\0';  // Supprime le caractère de nouvelle ligne
+    } while (verifisbn1(isbn) != 1);
+
+    int livreTrouve = 0;
+    for (int i = 0; i < numLivres; i++) {
+        if (atoll(isbn) == Livres[i].ISBN) {
+            livreTrouve = 1;
+            printf("Le livre recherché a été trouvé, le voici :\n");
+            printf("Le titre du livre : %s\n", Livres[i].titre);
+            printf("Editeur : %s\n", Livres[i].editeur);
+            for (int j = 0; j < 5; j++) {
+                // Check if the author's name is not empty
+                if (Livres[i].auteur[j].nom[0] != '\0' && Livres[i].auteur[j].prenom[0] != '\0') {
+                    printf("Auteur %d de l'oeuvre : %s %s\n", j + 1, Livres[i].auteur[j].nom, Livres[i].auteur[j].prenom);
+                }
+            }
+            printf("ISBN : %lld\n", Livres[i].ISBN);
+            printf("Quantité : %d\n", Livres[i].quantite);
+            printf("Le statut de vente du livre est : %s\n", Livres[i].frequence);
+            printf("\n");
+            break;
+        }
+    }
+    if (!livreTrouve) {
+        printf("Aucun livre trouvé avec cet ISBN.\n");
+    }
+}
+void chercherLivreParAuteur(struct livres Livres[], int numLivres) {
+    char nom[50];
+    char prenom[30];
+    printf("Entrez le nom de l'auteur : ");
+    fflush(stdout);
+    fgets(nom, 50, stdin);
+    printf("Entrez le prénom de l'auteur : ");
+    fflush(stdout);
+    fgets(prenom, 30, stdin);
+
+    int livreTrouve = 0;
+    for (int i = 0; i < numLivres; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (strcmp(nom, Livres[i].auteur[j].nom) == 0 && strcmp(prenom, Livres[i].auteur[j].prenom) == 0) {
+                livreTrouve = 1;
+                printf("Le livre recherché a été trouvé, le voici :\n");
+                printf("Le titre du livre : %s\n", Livres[i].titre);
+                printf("Editeur : %s\n", Livres[i].editeur);
+                for (int k = 0; k < 5; k++) {
+                    // Check if the author's name is not empty
+                    if (Livres[i].auteur[k].nom[0] != '\0' && Livres[i].auteur[k].prenom[0] != '\0') {
+                        printf("Auteur %d de l'oeuvre : %s %s\n", k + 1, Livres[i].auteur[k].nom, Livres[i].auteur[k].prenom);
+                    }
+                }
+                printf("ISBN : %lld\n", Livres[i].ISBN);
+                printf("Quantité : %d\n", Livres[i].quantite);
+                printf("Le statut de vente du livre est : %s\n", Livres[i].frequence);
+                printf("\n");
+                return;
+            }
+        }
+    }
+    if (!livreTrouve) {
+        printf("Aucun livre trouvé pour cet auteur.\n");
+    }
+}
 
 int main(void) {
     struct livres Liste[MAX_LIVRES];
@@ -133,4 +221,23 @@ int main(void) {
     } while (choix != 3);
 
     return 0;
+}
+void recherchelivre(struct livres Livres[], int *numLivres) {
+    int choix;
+    printf(" Vous allez devoir choisir la façon dont vous voulez que la recherche de livre se passe\n");
+    printf("1 par l'ISBN\n");
+    printf("2 par Auteur\n");
+    fflush(stdout);
+    scanf("%d", &choix);
+    switch (choix) {
+        case 1:
+            recherche_livre_par_isbn(Livres, numLivres);
+            break;
+        case 2:
+            recherche_livre_par_auteur(Livres, numLivres);
+            break;
+        default:
+            printf("Saisie non valide, veuillez recommencer.\n");
+            break;
+    }
 }
